@@ -63,15 +63,26 @@ ably-laravel-to-react/
 │  └─ vite.svg
 ├─ src/
 │  ├─ App.css
-│  ├─ App.jsx               # Landing page UI + Echo listeners + axios calls
+│  ├─ App.jsx               # Main app component (simplified)
+│  ├─ components/           # 4 main functional components
+│  │  ├─ Card.jsx          # Reusable card wrapper
+│  │  ├─ ChatTesting.jsx   # Real-time messaging component
+│  │  ├─ NotificationTest.jsx # Notification system component
+│  │  ├─ LiveStatusTesting.jsx # Live status updates component
+│  │  └─ DirectChat.jsx    # User-to-user messaging component
+│  ├─ utils/
+│  │  └─ api.js            # API utilities and constants
 │  ├─ app.js                # Example subscription (parity with Laravel sample)
 │  ├─ assets/
 │  │  └─ react.svg
-│  ├─ bootstrap.js          # axios baseURL, Echo + Ably client config
+│  ├─ realtime-setup.js     # axios baseURL, Echo + Ably client config
 │  ├─ hooks/
-│  │  └─ useEcho.js         # Optional hook for connection state
+│  │  ├─ useChat.js         # Chat functionality hook
+│  │  ├─ useNotifications.js # Notification functionality hook
+│  │  ├─ useStatus.js       # Status updates functionality hook
+│  │  └─ useDirectChat.js   # Direct messaging functionality hook
 │  ├─ index.css             # Global styles + Tailwind import
-│  └─ main.jsx              # App bootstrap (imports bootstrap.js)
+│  └─ main.jsx              # App bootstrap (imports realtime-setup.js)
 └─ vite.config.js           # Vite + Tailwind plugin
 ```
 

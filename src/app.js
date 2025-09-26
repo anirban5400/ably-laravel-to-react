@@ -1,4 +1,4 @@
-import './bootstrap';
+import './realtime-setup';
 
 // Example: subscribe to a demo channel
 if (window?.Echo) {

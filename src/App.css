@@ -87,6 +87,8 @@
   padding: 10px 12px;
   background: #fff;
   font-size: 14px;
+  width: -webkit-fill-available;
+  margin-bottom: 5px;
 }
 .input:focus {
   outline: none;
