@@ -13,7 +13,9 @@ function Card({ title, children }) {
 function App() {
   const [name, setName] = useState('anirban')
   const [status, setStatus] = useState('online')
-  const [statusUpdates, setStatusUpdates] = useState([])
+  const [statusUpdates, setStatusUpdates] = useState([
+    { name: 'anirban', status: 'online', received_at: '03:21:34' }
+  ])
 
   const [noteTitle, setNoteTitle] = useState('Demo Notification')
   const [noteMsg, setNoteMsg] = useState('Hello from notify-demo')
@@ -126,17 +128,54 @@ function App() {
   return (
     <div className="page">
       <h2 className="heading">Realtime Feature Playground</h2>
-      {/* Status + Notifications + Simple demo cards */}
+      
+      {/* Top row with 3 cards */}
       <div className="grid">
+        <Card title="Chat testing">
+          <p className="muted">Open this page in two browsers and send a message to see it arrive live.</p>
+          <hr className="divider" />
+          <p className="subtitle">Simple Livewire + Ably Demo</p>
+          <p className="muted small">Open two tabs to see messages arrive in real-time.</p>
+          <div className="messages">
+            {simpleLogs.map((m, idx) => (<div key={idx} className="msg">{m}</div>))}
+          </div>
+          <div className="row">
+            <input className="input" placeholder="Type a message." value={simpleMsg} onChange={(e)=>setSimpleMsg(e.target.value)} />
+            <button className="btn primary" onClick={sendSimple}>Send</button>
+          </div>
+        </Card>
+
+        <Card title="Notification test">
+          <p className="muted">Send a notification and see it arrive instantly.</p>
+          <input className="input" placeholder="Title." value={noteTitle} onChange={(e)=>setNoteTitle(e.target.value)} />
+          <input className="input" placeholder="Message." value={noteMsg} onChange={(e)=>setNoteMsg(e.target.value)} />
+          <select className="input" value={noteType} onChange={(e)=>setNoteType(e.target.value)}>
+            <option value="info">Info</option>
+            <option value="success">Success</option>
+            <option value="warning">Warning</option>
+            <option value="error">Error</option>
+          </select>
+          <button className="btn primary" onClick={sendNote}>Send notification.</button>
+          <div className="notifications">
+            <div className="notifications-title">Notifications:</div>
+            {notifications.length === 0 ? (
+              <div className="muted small">No notifications yet.</div>
+            ) : (
+              notifications.map((n, idx) => (
+                <div key={idx} className="note">[{n.type.toUpperCase()}] {n.title}: {n.message} ({n.received_at})</div>
+              ))
+            )}
+          </div>
+        </Card>
+
         <Card title="Live status testing">
           <p className="muted">Announce your status and watch it update across browsers.</p>
-          <input className="input" placeholder="Your Name" value={name} onChange={(e)=>setName(e.target.value)} />
+          <input className="input" placeholder="Your Name." value={name} onChange={(e)=>setName(e.target.value)} />
           <select className="input" value={status} onChange={(e)=>setStatus(e.target.value)}>
             <option value="online">Online</option>
             <option value="offline">Offline</option>
           </select>
-          <button className="btn primary" onClick={announce}>Announce Status</button>
-
+          <button className="btn primary" onClick={announce}>Announce Status.</button>
           <div className="status-box">
             <div className="status-title">Status Updates:</div>
             {statusUpdates.length === 0 ? (
@@ -150,51 +189,14 @@ function App() {
             )}
           </div>
         </Card>
-
-        <Card title="Notification test">
-          <p className="muted">Send a notification and see it arrive instantly.</p>
-          <input className="input" placeholder="Title" value={noteTitle} onChange={(e)=>setNoteTitle(e.target.value)} />
-          <input className="input" placeholder="Message" value={noteMsg} onChange={(e)=>setNoteMsg(e.target.value)} />
-          <select className="input" value={noteType} onChange={(e)=>setNoteType(e.target.value)}>
-            <option value="info">Info</option>
-            <option value="success">Success</option>
-            <option value="warning">Warning</option>
-            <option value="error">Error</option>
-          </select>
-          <button className="btn primary" onClick={sendNote}>Send notification</button>
-          <div className="notifications">
-            {notifications.length === 0 ? (
-              <div className="muted small">No notifications yet.</div>
-            ) : (
-              notifications.map((n, idx) => (
-                <div key={idx} className="note">[{n.type.toUpperCase()}] {n.title}: {n.message} ({n.received_at})</div>
-              ))
-            )}
-          </div>
-        </Card>
-
-        <Card title="Simple Livewire + Ably Demo">
-          <div className="panel">
-            <div className="panel-inner">
-              <div className="muted small">Open two tabs to see messages arrive in real-time.</div>
-              <div id="simple-messages" className="messages">
-                {simpleLogs.map((m, idx) => (<div key={idx} className="msg">{m}</div>))}
-              </div>
-              <div className="row">
-                <input className="input" placeholder="Type a message" value={simpleMsg} onChange={(e)=>setSimpleMsg(e.target.value)} />
-                <button className="btn primary" onClick={sendSimple}>Send</button>
-              </div>
-            </div>
-          </div>
-        </Card>
       </div>
 
-      {/* Direct chat (user ↔ user) */}
+      {/* Bottom card - Direct chat */}
       <div className="direct">
         <h3>Direct chat (user ↔ user)</h3>
         <p className="muted">Enter your own user ID and the peer's user ID to chat one-to-one.</p>
         <div className="row">
-          <input className="input" placeholder="Your User ID" value={ownUserId} onChange={(e)=>setOwnUserId(e.target.value)} />
+          <input className="input" placeholder="Your User ID." value={ownUserId} onChange={(e)=>setOwnUserId(e.target.value)} />
           <input className="input" placeholder="Chat with User ID" value={peerUserId} onChange={(e)=>setPeerUserId(e.target.value)} />
           <button className="btn primary wide" onClick={connectDm}>Connect</button>
         </div>
@@ -205,7 +207,7 @@ function App() {
             {dmLogs.map((m, idx) => (<div key={idx}>{m}</div>))}
           </div>
           <div className="row">
-            <input className="input" placeholder="Type a message" value={dmText} onChange={(e)=>setDmText(e.target.value)} />
+            <input className="input" placeholder="Type a message." value={dmText} onChange={(e)=>setDmText(e.target.value)} />
             <button className="btn primary" onClick={sendDm}>Send</button>
           </div>
         </div>

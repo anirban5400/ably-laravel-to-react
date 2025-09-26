@@ -3,20 +3,21 @@
   --text: #0f172a;
   --muted: #6b7280;
   --card: #fff;
-  --border: #e5e7eb;
+  --border: #000000;
   --primary: #4f46e5;
   --primary-contrast: #ffffff;
   --ok: #d1fae5;
+  --purple: #8b5cf6;
 }
 
 #root {
-  /* max-width: 1100px; */
   margin: 0 auto;
   padding: 24px;
+  max-width: 72rem;
 }
 
 .page {
-  background: var(--bg);
+  /* background: var(--bg); */
   min-height: 100vh;
 }
 
@@ -24,53 +25,59 @@
   font-size: 24px;
   font-weight: 700;
   color: var(--text);
-  margin: 8px 0 20px;
+  margin: 0 0 20px 0;
 }
 
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
+  margin-bottom: 16px;
 }
 
 .card-box {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 14px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .card-title {
   margin: 0 0 8px 0;
   font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
 }
 
 .muted {
   color: var(--muted);
-  margin: 0 0 10px 0;
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  line-height: 1.4;
 }
-.muted.small { font-size: 12px; }
+.muted.small { 
+  font-size: 12px; 
+  margin: 0 0 8px 0;
+}
 
-.panel {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 8px 0 12px 0;
 }
-.panel-inner { padding: 12px; }
 
-.messages {
-  min-height: 80px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  background: #fafafa;
-  padding: 8px;
-  margin-bottom: 10px;
+.subtitle {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  margin: 0 0 8px 0;
 }
-.msg { font-size: 13px; }
 
 .row {
   display: flex;
   gap: 8px;
+  margin: 8px 0;
 }
 
 .input {
@@ -79,41 +86,118 @@
   border-radius: 6px;
   padding: 10px 12px;
   background: #fff;
+  font-size: 14px;
+}
+.input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
 }
 
 .btn {
   border: none;
-  border-radius: 8px;
-  padding: 10px 14px;
+  border-radius: 6px;
+  padding: 10px 16px;
   cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
 }
-.btn.primary { background: var(--primary); color: var(--primary-contrast); }
-.btn.wide { width: 160px; }
+.btn.primary { 
+  background: var(--primary); 
+  color: var(--primary-contrast); 
+}
+.btn.primary:hover {
+  background: #4338ca;
+}
+.btn.wide { 
+  width: 100px; 
+  background: var(--purple);
+}
+.btn.wide:hover {
+  background: #7c3aed;
+}
 
 .notifications {
-  margin-top: 10px;
+  margin-top: 12px;
   border: 1px solid var(--border);
   border-radius: 6px;
-  background: #f3f4f6;
-  padding: 8px;
+  background: #f8f9fa;
+  padding: 12px;
 }
-.note { font-size: 13px; color: #111827; background: #e5e7eb; padding: 6px 8px; border-radius: 4px; }
+.notifications-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+.note { 
+  font-size: 13px; 
+  color: #111827; 
+  background: #e5e7eb; 
+  padding: 6px 8px; 
+  border-radius: 4px; 
+  margin-bottom: 4px;
+}
 
 .status-box {
-  margin-top: 10px;
+  margin-top: 12px;
   border: 1px solid var(--border);
   border-radius: 6px;
-  padding: 8px;
+  padding: 12px;
   background: #fff;
 }
-.status-title { font-weight: 600; margin-bottom: 6px; }
-.status-item.ok { background: var(--ok); padding: 6px 8px; border-radius: 4px; }
+.status-title { 
+  font-weight: 600; 
+  margin-bottom: 8px; 
+  font-size: 14px;
+}
+.status-item.ok { 
+  background: var(--ok); 
+  padding: 8px 10px; 
+  border-radius: 4px; 
+  margin-bottom: 4px;
+}
+.bold {
+  font-weight: 600;
+}
 
-.direct { margin-top: 16px; }
-.direct .row { margin: 8px 0; }
-.direct-panel { border: 1px solid var(--border); border-radius: 8px; background: var(--card); padding: 12px; }
-.label { font-weight: 600; margin-bottom: 6px; }
-.direct-messages { border: 1px solid var(--border); background: #fafafa; border-radius: 6px; padding: 8px; margin-bottom: 10px; }
+.direct { 
+  margin-top: 16px; 
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+.direct h3 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+}
+.direct .row { 
+  margin: 8px 0; 
+}
+.direct-panel { 
+  border: 1px solid var(--border); 
+  border-radius: 6px; 
+  background: #f8f9fa; 
+  padding: 12px; 
+  margin-top: 12px;
+}
+.label { 
+  font-weight: 600; 
+  margin-bottom: 8px; 
+  font-size: 14px;
+}
+.direct-messages { 
+  border: 1px solid var(--border); 
+  background: #fafafa; 
+  border-radius: 6px; 
+  padding: 8px; 
+  margin-bottom: 10px; 
+  min-height: 60px;
+}
 
 @media (max-width: 1000px) {
   .grid { grid-template-columns: 1fr; }
