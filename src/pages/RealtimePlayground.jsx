@@ -8,7 +8,7 @@ import LiveStatusTesting from '../components/LiveStatusTesting';
 import DirectChat from '../components/DirectChat';
 
 // Import lazy realtime setup
-import { initializeRealtime } from '../utils/lazy-realtime-setup';
+import { initializeRealtime, disconnectRealtime } from '../utils/lazy-realtime-setup';
 
 /**
  * RealtimePlayground Page Component
@@ -28,13 +28,21 @@ const RealtimePlayground = () => {
         await initializeRealtime();
       } catch (error) {
         console.error('Failed to initialize realtime connection:', error);
-        setConnectionError('Failed to connect to realtime services');
+        
+        // Use enhanced error message if available
+        const errorMessage = error.message || 'Failed to connect to realtime services';
+        setConnectionError(errorMessage);
       } finally {
         setIsConnecting(false);
       }
     };
 
     setupRealtime();
+
+    // Cleanup function - disconnect when component unmounts
+    return () => {
+      disconnectRealtime();
+    };
   }, []);
 
   const handleBackToHome = () => {
@@ -72,15 +80,51 @@ const RealtimePlayground = () => {
         </div>
         
         <div className="connection-error">
-          <div className="error-icon">⚠️</div>
+          <div className="error-icon">
+            {connectionError.includes('timeout') ? '⏱️' : 
+             connectionError.includes('Network') ? '🌐' : 
+             connectionError.includes('Authentication') ? '🔑' : '⚠️'}
+          </div>
           <h3 className="error-title">Connection Failed</h3>
           <p className="error-message">{connectionError}</p>
-          <button 
-            className="btn primary" 
-            onClick={() => window.location.reload()}
-          >
-            Retry Connection
-          </button>
+          
+          {/* Additional help text based on error type */}
+          {connectionError.includes('timeout') && (
+            <div className="error-help">
+              <p><strong>💡 Troubleshooting tips:</strong></p>
+              <ul>
+                <li>Check your internet connection</li>
+                <li>Try refreshing the page</li>
+                <li>Wait a moment and try again</li>
+              </ul>
+            </div>
+          )}
+          
+          {connectionError.includes('Network') && (
+            <div className="error-help">
+              <p><strong>💡 Troubleshooting tips:</strong></p>
+              <ul>
+                <li>Check your internet connection</li>
+                <li>Try disabling VPN or proxy</li>
+                <li>Check if firewall is blocking the connection</li>
+              </ul>
+            </div>
+          )}
+          
+          <div className="error-actions">
+            <button 
+              className="btn primary" 
+              onClick={() => window.location.reload()}
+            >
+              🔄 Retry Connection
+            </button>
+            <button 
+              className="btn secondary" 
+              onClick={handleBackToHome}
+            >
+              ← Back to Home
+            </button>
+          </div>
         </div>
       </div>
     );

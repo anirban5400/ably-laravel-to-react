@@ -27,10 +27,14 @@ export const useChat = () => {
     // Cleanup
     return () => {
       try {
-        publicChannel.stopListening('.MessageSent');
-        window.Echo.leave('public-demo');
+        if (publicChannel && typeof publicChannel.stopListening === 'function') {
+          publicChannel.stopListening('.MessageSent');
+        }
+        if (window.Echo && typeof window.Echo.leave === 'function') {
+          window.Echo.leave('public-demo');
+        }
       } catch (error) {
-        console.warn('Error cleaning up chat channel:', error);
+        console.warn('Error cleaning up chat channel:', error?.message ?? 'Unknown error');
       }
     };
   }, []);
@@ -42,14 +46,23 @@ export const useChat = () => {
     try {
       const response = await window.axios.post('/api/broadcast-demo', 
         { message: messageText }, 
-        { withCredentials: false, headers: { 'Accept': 'application/json' } }
+        { 
+          withCredentials: false, 
+          headers: { 'Accept': 'application/json' },
+          timeout: 10000 // 10 second timeout
+        }
       );
       
       setMessage('');
       return response.data;
     } catch (error) {
       console.error('Error sending message:', error);
-      throw error;
+      
+      // Use global error message if available, otherwise provide default
+      const userMessage = error.userMessage || 'Failed to send message';
+      const enhancedError = new Error(userMessage);
+      enhancedError.originalError = error;
+      throw enhancedError;
     } finally {
       setIsLoading(false);
     }

@@ -37,8 +37,12 @@ export const useStatus = () => {
     // Cleanup
     return () => {
       try {
-        statusChannel.stopListening('.DemoStatusChanged');
-        window.Echo.leave('status-demo');
+        if (statusChannel && typeof statusChannel.stopListening === 'function') {
+          statusChannel.stopListening('.DemoStatusChanged');
+        }
+        if (window.Echo && typeof window.Echo.leave === 'function') {
+          window.Echo.leave('status-demo');
+        }
       } catch (error) {
         console.warn('Error cleaning up status channel:', error);
       }
@@ -53,12 +57,18 @@ export const useStatus = () => {
         status: userStatus
       }, {
         withCredentials: false,
-        headers: { 'Accept': 'application/json' }
+        headers: { 'Accept': 'application/json' },
+        timeout: 10000 // 10 second timeout
       });
       return response.data;
     } catch (error) {
       console.error('Error announcing status:', error);
-      throw error;
+      
+      // Use global error message if available, otherwise provide default
+      const userMessage = error.userMessage || 'Failed to announce status';
+      const enhancedError = new Error(userMessage);
+      enhancedError.originalError = error;
+      throw enhancedError;
     } finally {
       setIsLoading(false);
     }

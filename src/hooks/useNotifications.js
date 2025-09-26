@@ -37,8 +37,12 @@ export const useNotifications = () => {
     // Cleanup
     return () => {
       try {
-        notificationChannel.stopListening('.DemoNotificationSent');
-        window.Echo.leave('notify-demo');
+        if (notificationChannel && typeof notificationChannel.stopListening === 'function') {
+          notificationChannel.stopListening('.DemoNotificationSent');
+        }
+        if (window.Echo && typeof window.Echo.leave === 'function') {
+          window.Echo.leave('notify-demo');
+        }
       } catch (error) {
         console.warn('Error cleaning up notification channel:', error);
       }
@@ -50,12 +54,18 @@ export const useNotifications = () => {
     try {
       const response = await window.axios.post('/api/notify-demo', notificationData, {
         withCredentials: false,
-        headers: { 'Accept': 'application/json' }
+        headers: { 'Accept': 'application/json' },
+        timeout: 10000 // 10 second timeout
       });
       return response.data;
     } catch (error) {
       console.error('Error sending notification:', error);
-      throw error;
+      
+      // Use global error message if available, otherwise provide default
+      const userMessage = error.userMessage || 'Failed to send notification';
+      const enhancedError = new Error(userMessage);
+      enhancedError.originalError = error;
+      throw enhancedError;
     } finally {
       setIsLoading(false);
     }

@@ -21,7 +21,7 @@ export const useDirectChat = () => {
   useEffect(() => {
     // Cleanup on unmount
     return () => {
-      if (dmChannelRef.current) {
+      if (dmChannelRef.current && typeof dmChannelRef.current.stopListening === 'function') {
         try {
           dmChannelRef.current.stopListening('.DirectMessageSent');
           dmChannelRef.current.stopListening('App\\\\Events\\\\DirectMessageSent');
@@ -29,7 +29,7 @@ export const useDirectChat = () => {
           console.warn('Error stopping direct message listeners:', error);
         }
       }
-      if (dmChannelNameRef.current) {
+      if (dmChannelNameRef.current && window.Echo && typeof window.Echo.leave === 'function') {
         try {
           window.Echo.leave(dmChannelNameRef.current);
         } catch (error) {
@@ -93,7 +93,8 @@ export const useDirectChat = () => {
         message
       }, {
         withCredentials: false,
-        headers: { 'Accept': 'application/json' }
+        headers: { 'Accept': 'application/json' },
+        timeout: 10000 // 10 second timeout
       });
 
       // Add message to local state for immediate display
@@ -103,7 +104,12 @@ export const useDirectChat = () => {
       return response.data;
     } catch (error) {
       console.error('Error sending direct message:', error);
-      throw error;
+      
+      // Use global error message if available, otherwise provide default
+      const userMessage = error.userMessage || 'Failed to send direct message';
+      const enhancedError = new Error(userMessage);
+      enhancedError.originalError = error;
+      throw enhancedError;
     } finally {
       setIsLoading(false);
     }
@@ -118,7 +124,7 @@ export const useDirectChat = () => {
   };
 
   const disconnect = () => {
-    if (dmChannelRef.current) {
+    if (dmChannelRef.current && typeof dmChannelRef.current.stopListening === 'function') {
       try {
         dmChannelRef.current.stopListening('.DirectMessageSent');
         dmChannelRef.current.stopListening('App\\\\Events\\\\DirectMessageSent');
@@ -126,7 +132,7 @@ export const useDirectChat = () => {
         console.warn('Error stopping listeners:', error);
       }
     }
-    if (dmChannelNameRef.current) {
+    if (dmChannelNameRef.current && window.Echo && typeof window.Echo.leave === 'function') {
       try {
         window.Echo.leave(dmChannelNameRef.current);
       } catch (error) {
