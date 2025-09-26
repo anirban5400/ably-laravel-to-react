@@ -1,31 +1,33 @@
 import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 
+// Import pages
+import LandingPage from './pages/LandingPage';
+import RealtimePlayground from './pages/RealtimePlayground';
+
 // Import components
-import ChatTesting from './components/ChatTesting';
-import NotificationTest from './components/NotificationTest';
-import LiveStatusTesting from './components/LiveStatusTesting';
-import DirectChat from './components/DirectChat';
+import Navigation from './components/Navigation';
 
 /**
  * Main App Component
- * Orchestrates the Realtime Feature Playground with 4 main features
+ * Handles routing and navigation for the application
  */
 function App() {
   return (
-    <div className="page">
-      <h2 className="heading">Realtime Feature Playground</h2>
-      
-      {/* Top row with 3 cards */}
-      <div className="grid">
-        <ChatTesting />
-        <NotificationTest />
-        <LiveStatusTesting />
+    <Router>
+      <div className="app">
+        <Navigation />
+        <main className="main-content">
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/realtime-feature-playground" element={<RealtimePlayground />} />
+            {/* Future routes can be added here */}
+            {/* <Route path="/analytics-dashboard" element={<AnalyticsDashboard />} /> */}
+          </Routes>
+        </main>
       </div>
-
-      {/* Bottom card - Direct chat */}
-      <DirectChat />
-    </div>
+    </Router>
   );
 }
 

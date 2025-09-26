@@ -10,22 +10,52 @@ This React application has been refactored into a professional, modular structur
 src/
 ├── components/
 │   ├── Card.jsx                 # Reusable card wrapper component
+│   ├── Navigation.jsx           # Navigation and breadcrumb component
 │   ├── ChatTesting.jsx          # Real-time messaging component
 │   ├── NotificationTest.jsx     # Notification system component
 │   ├── LiveStatusTesting.jsx    # Live status updates component
 │   └── DirectChat.jsx           # User-to-user messaging component
+├── pages/
+│   ├── LandingPage.jsx          # Main landing page with feature cards
+│   └── RealtimePlayground.jsx   # Realtime feature testing page
 ├── hooks/
 │   ├── useChat.js              # Chat functionality hook
 │   ├── useNotifications.js     # Notification functionality hook
 │   ├── useStatus.js            # Status updates functionality hook
 │   └── useDirectChat.js        # Direct messaging functionality hook
 ├── utils/
-│   └── api.js                  # API utilities and constants
-├── realtime-setup.js           # Axios, Echo + Ably configuration
-├── App.jsx                     # Main app component (simplified)
+│   ├── api.js                  # API utilities and constants
+│   └── lazy-realtime-setup.js  # Lazy loading for Ably connection
+├── App.jsx                     # Main app component with routing
 ├── App.css                     # Global styles
 └── main.jsx                    # Application entry point
 ```
+
+## 🛣️ Routing Structure
+
+The application uses React Router DOM for client-side routing:
+
+### **Routes:**
+- **`/`** - Landing page with feature cards
+- **`/realtime-feature-playground`** - Realtime feature testing page
+
+### **Navigation:**
+- **Sticky Navigation Bar** - Always visible with home button and breadcrumbs
+- **Breadcrumb Navigation** - Shows current location in the app
+- **Back Button** - Easy navigation back to home
+
+### **Future Routes:**
+The structure is designed to easily add new feature pages:
+```jsx
+// Example future route
+<Route path="/analytics-dashboard" element={<AnalyticsDashboard />} />
+```
+
+### **Lazy Loading Optimization:**
+- **Landing Page** (`/`) - No Ably connection, fast loading
+- **Playground Page** (`/realtime-feature-playground`) - Ably connection initialized on demand
+- **Smart Loading** - Connection only established when real-time features are needed
+- **Error Handling** - Graceful fallback if connection fails
 
 ## 🧩 Component Details
 
